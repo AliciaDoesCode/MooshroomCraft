@@ -34,10 +34,9 @@ client.on('clientReady', () => {
       .setColor(0xffcb05)
       .setTitle('A wild Pokémon appeared!')
       .setDescription(`Can you catch it? Type the name in chat to capture it!`)
-      .addFields({ name: 'Hint', value: `It's a Generation 1 or 2 Pokémon.` })
       .setImage(imageUrl)
       .setFooter({ text: 'First person to type the name wins!' });
-  await channel.send({ embeds: [embed] });
+    await channel.send({ embeds: [embed] });
 
     // Improved filter: ignore case, trim spaces, remove punctuation
     function normalize(str) {
@@ -58,8 +57,8 @@ client.on('clientReady', () => {
   }
 
   function randomInterval() {
-    // Random interval between 5 and 15 minutes
-    return Math.floor(Math.random() * (15 - 5 + 1) + 5) * 60 * 1000;
+  // Random interval between 2 and 4 hours
+  return Math.floor(Math.random() * (4 - 2 + 1) + 2) * 60 * 60 * 1000;
   }
 
   async function loopSpawn() {
