@@ -37,7 +37,7 @@ client.on('clientReady', () => {
       .addFields({ name: 'Hint', value: `It's a Generation 1 or 2 Pokémon.` })
       .setImage(imageUrl)
       .setFooter({ text: 'First person to type the name wins!' });
-    await channel.send({ content: `A wild **${randomPokemon}** appeared!`, embeds: [embed] });
+  await channel.send({ embeds: [embed] });
 
     const filter = m => m.content.toLowerCase() === randomPokemon.toLowerCase() && !m.author.bot;
     const collector = channel.createMessageCollector({ filter, time: 15000 });
