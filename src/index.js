@@ -39,7 +39,11 @@ client.on('clientReady', () => {
       .setFooter({ text: 'First person to type the name wins!' });
   await channel.send({ embeds: [embed] });
 
-  const filter = m => m.content.toLowerCase() === randomPokemon.toLowerCase() && !m.author.bot;
+    // Improved filter: ignore case, trim spaces, remove punctuation
+    function normalize(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+    }
+    const filter = m => normalize(m.content) === normalize(randomPokemon) && !m.author.bot;
   // Give users 5 minutes (300000 ms) to reply
   const collector = channel.createMessageCollector({ filter, time: 300000 });
     collector.on('collect', async m => {
