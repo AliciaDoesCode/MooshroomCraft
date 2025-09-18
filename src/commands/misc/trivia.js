@@ -73,7 +73,7 @@ module.exports = {
 
     const row = new ActionRowBuilder().addComponents(selectMenu);
 
-    await interaction.reply({ embeds: [embed], components: [row], ephemeral: true });
+  await interaction.reply({ embeds: [embed], components: [row] });
 
     // Create a collector for the select menu
     const filter = i => i.customId === 'trivia_answer' && i.user.id === interaction.user.id;
@@ -82,15 +82,15 @@ module.exports = {
     collector.on('collect', async i => {
       const selected = i.values[0];
       if (selected === q.answer) {
-        await i.reply({ content: '✅ Correct! You know your Minecraft!', ephemeral: true });
+        await i.reply({ content: '✅ Correct! You know your Minecraft!' });
       } else {
-        await i.reply({ content: `❌ Wrong! The correct answer was **${q.answer}**.`, ephemeral: true });
+        await i.reply({ content: `❌ Wrong! The correct answer was **${q.answer}**.` });
       }
     });
 
     collector.on('end', collected => {
       if (collected.size === 0) {
-        interaction.followUp({ content: '⏰ Time is up! Try /trivia again.', ephemeral: true });
+        interaction.followUp({ content: '⏰ Time is up! Try /trivia again.' });
       }
     });
   }
