@@ -39,8 +39,9 @@ client.on('clientReady', () => {
       .setFooter({ text: 'First person to type the name wins!' });
   await channel.send({ embeds: [embed] });
 
-    const filter = m => m.content.toLowerCase() === randomPokemon.toLowerCase() && !m.author.bot;
-    const collector = channel.createMessageCollector({ filter, time: 15000 });
+  const filter = m => m.content.toLowerCase() === randomPokemon.toLowerCase() && !m.author.bot;
+  // Give users 5 minutes (300000 ms) to reply
+  const collector = channel.createMessageCollector({ filter, time: 300000 });
     collector.on('collect', async m => {
       await channel.send(`🎉 ${m.author} caught **${randomPokemon}**!`);
       collector.stop();
