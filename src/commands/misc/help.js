@@ -2,17 +2,31 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 
 const pages = [
   {
-    name: 'General',
-    description: 'General commands for everyone.',
+    name: 'Misc',
+    description: 'Fun and utility commands for everyone.',
     commands: [
       { name: 'level', description: 'Check your level and XP.' },
       { name: 'gay', description: 'Tells you how gay you are.' },
       { name: 'kiss', description: 'Kiss another user.' },
       { name: 'advice', description: 'Get a random piece of advice.' },
+      { name: 'help', description: 'Show help for all commands.' },
+      { name: 'trivia', description: 'Answer a random Minecraft trivia question!' },
+      { name: 'pokemon', description: 'Try to catch a wild Pokémon!' },
+      { name: 'tntsweeper', description: 'Play Minecraft TNT Sweeper!' },
+      { name: 'minecraftstatus', description: 'Get the current Minecraft server status.' },
     ],
-    color: 0x3498db,
+    color: 0x00c3ff,
   },
-    {
+  {
+    name: 'Economy',
+    description: 'Economy commands for earning and spending coins.',
+    commands: [
+      { name: 'coins', description: 'Check your coin balance.' },
+      { name: 'daily', description: 'Claim your daily coins.' },
+      { name: 'mine', description: 'Mine for coins.' },
+      { name: 'sell', description: 'Sell items for coins.' },
+    ],
+    color: 0xf1c40f,
   },
 ];
 
