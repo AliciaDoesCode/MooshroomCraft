@@ -13,25 +13,21 @@ module.exports = {
   callback: async (client, interaction) => {
     await interaction.deferReply();
     try {
-      // Mojang status API (use new endpoint)
-      const res = await fetch('https://api.mojang.com/check');
+      // Use mcstatus.io API for Minecraft Java server status
+      const res = await fetch('https://api.mcstatus.io/v2/status/java/minecraft.net');
       if (!res.ok) throw new Error('API returned non-OK status');
       const data = await res.json();
-      const statusMap = {
-        green: '🟢 Up',
-        yellow: '🟡 Some Issues',
-        red: '🔴 Down',
-      };
       let statusMsg = '';
-      for (const service of data) {
-        const [name, status] = Object.entries(service)[0];
-        statusMsg += `**${name}**: ${statusMap[status] || status}\n`;
+      if (data.online) {
+        statusMsg = '🟢 Minecraft is online and running.';
+      } else {
+        statusMsg = '🔴 Minecraft is offline or experiencing issues.';
       }
       const embed = new EmbedBuilder()
-        .setColor(statusMsg.includes('🔴') ? 0xff0000 : 0x00ff00)
+        .setColor(data.online ? 0x00ff00 : 0xff0000)
         .setTitle('Minecraft Service Status')
         .setDescription(statusMsg)
-        .setFooter({ text: 'Source: api.mojang.com' });
+        .setFooter({ text: 'Source: mcstatus.io' });
       await interaction.editReply({ embeds: [embed] });
     } catch (err) {
       await interaction.editReply('Could not fetch Minecraft status.');
