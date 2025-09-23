@@ -33,7 +33,7 @@ module.exports = async (message) => {
       footer: { text: 'MooshroomCraft Bot' },
       timestamp: new Date().toISOString()
     };
-    const { userWarnings, warningCooldowns } = require('../../data/warnings');
+    const { userWarnings, warningCooldowns } = require('../../../data/warnings');
   }
   if (!message.author || !message.guild || !message.member) return;
   if (message.author.bot) return;
