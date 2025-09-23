@@ -52,8 +52,8 @@ module.exports = {
     const row = new ActionRowBuilder().addComponents(selectMenu);
     try {
       await interaction.reply({ embeds: [embed], components: [row] });
-      const replyMsg = await interaction.fetchReply();
-      const collector = replyMsg.createMessageComponentCollector({
+      // Use channel collector as a fallback
+      const collector = interaction.channel.createMessageComponentCollector({
         filter: i => i.customId === 'choose_starter' && i.user.id === userId,
         time: 60000,
         max: 1
