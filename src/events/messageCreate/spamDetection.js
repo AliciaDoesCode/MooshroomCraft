@@ -9,7 +9,9 @@ const SPAM_MENTIONS = 5; // Number of mentions in one message to trigger spam
 const userMessages = new Collection();
 const userWarnings = new Collection();
 
-module.exports = async (client, message) => {
+module.exports = async (message) => {
+  // Guard against undefined or non-object message
+  if (!message || typeof message !== 'object') return;
   // Helper to timeout and ban
   async function punishUser(userId, action, reason) {
     try {
@@ -28,9 +30,10 @@ module.exports = async (client, message) => {
       footer: { text: 'MooshroomCraft Bot' },
       timestamp: new Date().toISOString()
     };
-    const logChannel = await client.channels.fetch(logChannelId).catch(() => null);
+    const logChannel = await message.client.channels.fetch(logChannelId).catch(() => null);
     if (logChannel) await logChannel.send({ embeds: [logEmbed] });
   }
+  if (!message.author || !message.guild || !message.member) return;
   if (message.author.bot) return;
   const now = Date.now();
   const userId = message.author.id;
@@ -69,7 +72,7 @@ module.exports = async (client, message) => {
       footer: { text: 'MooshroomCraft Bot' },
       timestamp: new Date().toISOString()
     };
-    const logChannel = await client.channels.fetch(logChannelId).catch(() => null);
+    const logChannel = await message.client.channels.fetch(logChannelId).catch(() => null);
     if (logChannel) await logChannel.send({ embeds: [logEmbed] });
 
     // Timeout after 3 warnings
