@@ -1,3 +1,6 @@
+// Export for moderation commands
+module.exports.userWarnings = userWarnings;
+const warningCooldowns = new Collection(); // userId -> timestamp
 const { Collection } = require('discord.js');
 
 // Configurable thresholds
@@ -30,8 +33,7 @@ module.exports = async (message) => {
       footer: { text: 'MooshroomCraft Bot' },
       timestamp: new Date().toISOString()
     };
-    const logChannel = await message.client.channels.fetch(logChannelId).catch(() => null);
-    if (logChannel) await logChannel.send({ embeds: [logEmbed] });
+    const { userWarnings, warningCooldowns } = require('../../data/warnings');
   }
   if (!message.author || !message.guild || !message.member) return;
   if (message.author.bot) return;
@@ -48,10 +50,17 @@ module.exports = async (message) => {
 
   // Helper to send warning and log
   async function warnAndLog(reason) {
-    // Track warnings
-    const prev = userWarnings.get(userId) || 0;
-    const newCount = prev + 1;
-    userWarnings.set(userId, newCount);
+
+  // Cooldown: Only warn if last warning was >60s ago
+  const lastWarn = warningCooldowns.get(userId) || 0;
+  const nowWarn = Date.now();
+  if (nowWarn - lastWarn < 60000) return; // 1 minute cooldown
+  warningCooldowns.set(userId, nowWarn);
+
+  // Track warnings
+  const prev = userWarnings.get(userId) || 0;
+  const newCount = prev + 1;
+  userWarnings.set(userId, newCount);
 
     await message.delete().catch(() => {});
     // Send warning embed to user
