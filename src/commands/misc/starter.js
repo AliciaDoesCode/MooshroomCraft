@@ -41,6 +41,7 @@ module.exports = {
       await interaction.reply({ content: `You already chose ${userData.starter} as your starter!`, ephemeral: true });
       return;
     }
+    await interaction.deferReply();
     const embed = new EmbedBuilder()
       .setColor(0xffcb05)
       .setTitle('Choose Your Starter Pokémon!')
@@ -50,7 +51,7 @@ module.exports = {
       .setPlaceholder('Select your starter Pokémon...')
       .addOptions(starters.map(p => ({ label: `${pokemonIcons[p] || ''} ${p}`, value: p })));
     const row = new ActionRowBuilder().addComponents(selectMenu);
-    await interaction.reply({ embeds: [embed], components: [row] });
+    await interaction.editReply({ embeds: [embed], components: [row] });
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter: i => i.customId === 'choose_starter' && i.user.id === userId,
@@ -60,7 +61,7 @@ module.exports = {
     collector.on('collect', async i => {
   const chosen = i.values[0];
   setUserStarter(userId, chosen);
-  await i.update({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!`)], components: [] });
+  await i.update({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!\n\n${pokemonIcons[chosen] || ''} **${chosen}** has been added to your collection!`)], components: [] });
     });
     collector.on('end', collected => {
       if (collected.size === 0) {
