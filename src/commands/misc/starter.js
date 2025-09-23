@@ -41,7 +41,6 @@ module.exports = {
       await interaction.reply({ content: `You already chose ${userData.starter} as your starter!`, ephemeral: true });
       return;
     }
-    await interaction.deferReply();
     const embed = new EmbedBuilder()
       .setColor(0xffcb05)
       .setTitle('Choose Your Starter Pokémon!')
@@ -51,22 +50,28 @@ module.exports = {
       .setPlaceholder('Select your starter Pokémon...')
       .addOptions(starters.map(p => ({ label: `${pokemonIcons[p] || ''} ${p}`, value: p })));
     const row = new ActionRowBuilder().addComponents(selectMenu);
-    await interaction.editReply({ embeds: [embed], components: [row] });
-
-    const collector = interaction.channel.createMessageComponentCollector({
-      filter: i => i.customId === 'choose_starter' && i.user.id === userId,
-      time: 60000,
-      max: 1
-    });
-    collector.on('collect', async i => {
-  const chosen = i.values[0];
-  setUserStarter(userId, chosen);
-  await i.update({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!\n\n${pokemonIcons[chosen] || ''} **${chosen}** has been added to your collection!`)], components: [] });
-    });
-    collector.on('end', collected => {
-      if (collected.size === 0) {
-        interaction.editReply({ content: 'Starter selection timed out.', embeds: [], components: [] });
-      }
-    });
+    try {
+      await interaction.reply({ embeds: [embed], components: [row] });
+      const replyMsg = await interaction.fetchReply();
+      const collector = replyMsg.createMessageComponentCollector({
+        filter: i => i.customId === 'choose_starter' && i.user.id === userId,
+        time: 60000,
+        max: 1
+      });
+      collector.on('collect', async i => {
+        const chosen = i.values[0];
+        setUserStarter(userId, chosen);
+        await i.update({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!\n\n${pokemonIcons[chosen] || ''} **${chosen}** has been added to your collection!`)], components: [] });
+      });
+      collector.on('end', async collected => {
+        if (collected.size === 0) {
+          try {
+            await interaction.editReply({ content: 'Starter selection timed out.', embeds: [], components: [] });
+          } catch (e) {}
+        }
+      });
+    } catch (err) {
+      await interaction.reply({ content: 'An error occurred. Please try again later.', ephemeral: true });
+    }
   }
 };
