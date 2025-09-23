@@ -61,7 +61,7 @@ module.exports = {
     collector.on('collect', async i => {
   const chosen = i.values[0];
   setUserStarter(userId, chosen);
-  await i.reply({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!\n\n${pokemonIcons[chosen] || ''} **${chosen}** has been added to your collection!`)], components: [] });
+  await i.update({ embeds: [embed.setDescription(`You chose ${pokemonIcons[chosen] || ''} **${chosen}** as your starter! You received a Pokéball!\n\n${pokemonIcons[chosen] || ''} **${chosen}** has been added to your collection!`)], components: [] });
     });
     collector.on('end', collected => {
       if (collected.size === 0) {
