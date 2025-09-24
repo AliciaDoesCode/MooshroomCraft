@@ -1,5 +1,4 @@
-
-const { userWarnings } = require('.../data/warnings');
+const { userWarnings } = require('../../data/warnings');
 
 module.exports = {
   name: 'clearwarnings',
